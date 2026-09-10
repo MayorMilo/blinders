@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <main class="shell">
+    <header class="brand">
+      <svg class="brand__mark" width="15" height="15" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+        <path d="M3 12s3.5-6 9-6 9 6 9 6-3.5 6-9 6-9-6-9-6z"/>
+        <circle cx="12" cy="12" r="2.6"/>
+        <path d="M4 20L20 4"/>
+      </svg>
+      <span class="brand__name">Blinders</span>
+    </header>
+
+    <button id="toggle" class="switch" role="switch" aria-checked="true" aria-label="Toggle Blinders">
+      <span class="switch__track"><span class="switch__knob"></span></span>
+    </button>
+
+    <p id="state" class="state">On</p>
+    <p id="count" class="count">&nbsp;</p>
+  </main>
+
+  <section class="settings">
+    <button id="settingsToggle" class="settings__head" aria-expanded="false" aria-controls="settingsBody">
+      <span>Settings</span>
+      <svg class="chev" width="11" height="11" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="6 9 12 15 18 9"/>
+      </svg>
+    </button>
+
+    <div id="settingsBody" class="settings__body" hidden>
+      <p class="field-label">Always allow these channels</p>
+
+      <form id="allowForm" class="add" autocomplete="off">
+        <input id="allowInput" class="add__input" type="text"
+               placeholder="youtube.com/@channel" aria-label="Channel URL or name to allow" />
+        <button id="allowBtn" class="add__btn" type="submit" aria-label="Allow channel">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2.6" stroke-linecap="round">
+            <path d="M12 5v14M5 12h14"/>
+          </svg>
+        </button>
+      </form>
+      <p id="allowNote" class="note" hidden></p>
+
+      <ul id="allowList" class="list"></ul>
+      <p id="allowEmpty" class="empty">Nothing allowed yet. Paste a channel link to
+        keep it out of the blur.</p>
+
+      <div class="rule"></div>
+
+      <p class="field-label">Never allow these channels</p>
+
+      <form id="blockForm" class="add" autocomplete="off">
+        <input id="blockInput" class="add__input" type="text"
+               placeholder="youtube.com/@channel" aria-label="Channel URL or name to block" />
+        <button id="blockBtn" class="add__btn add__btn--deny" type="submit" aria-label="Block channel">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2.6" stroke-linecap="round">
+            <path d="M5 12h14"/>
+          </svg>
+        </button>
+      </form>
+      <p id="blockNote" class="note" hidden></p>
+
+      <ul id="blockList" class="list"></ul>
+      <p id="blockEmpty" class="empty">Nothing blocked outright. Channels here are
+        always blurred and always blocked, whatever the model thinks.</p>
+
+      <div class="rule"></div>
+
+      <button id="lexToggle" class="sub__head" aria-expanded="false" aria-controls="lexBody">
+        <span class="field-label field-label--flush">Lexicon</span>
+        <span class="sub__meta"><span id="lexCount">0</span>
+          <svg class="chev" width="11" height="11" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </span>
+      </button>
+
+      <div id="lexBody" class="sub__body" hidden>
+        <input id="lexSearch" class="add__input add__input--full" type="text"
+               placeholder="Search terms…" aria-label="Search the lexicon" autocomplete="off" />
+
+        <p id="lexSummary" class="note note--static" hidden></p>
+        <ul id="lexList" class="list list--lex"></ul>
+
+        <div id="lexAddRow" class="lexadd" hidden>
+          <div class="lexadd__opts">
+            <div class="seg" role="radiogroup" aria-label="Direction">
+              <button type="button" class="seg__btn is-active" data-dir="neg">Distracting</button>
+              <button type="button" class="seg__btn" data-dir="pos">Productive</button>
+            </div>
+            <div class="seg seg--small" role="radiogroup" aria-label="Strength">
+              <button type="button" class="seg__btn is-active" data-strength="strong">Strong</button>
+              <button type="button" class="seg__btn" data-strength="med">Med</button>
+              <button type="button" class="seg__btn" data-strength="weak">Weak</button>
+            </div>
+          </div>
+          <button id="lexAddBtn" class="lexadd__go" type="button">Add “<span id="lexAddTerm"></span>”</button>
+        </div>
+        <p id="lexNote" class="note" hidden></p>
+      </div>
+
+      <div class="rule"></div>
+
+      <div class="row">
+        <span id="videoCount" class="row__label">No videos unblocked</span>
+        <button id="clearVideos" class="row__action" hidden>Clear</button>
+      </div>
+    </div>
+  </section>
+
+  <script src="../src/channels.js"></script>
+  <script src="../src/model.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

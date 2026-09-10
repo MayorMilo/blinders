@@ -1,0 +1,262 @@
+/* ============================ Blinders — injected styles ============================ */
+
+:root {
+  --bl-veil-bg: rgba(9, 11, 16, 0.35);
+  --bl-accent: #6ee7b7;
+}
+
+/* ---------------------------------------------------------------- thumbnails */
+
+/* Blur the artwork itself. Scale up slightly so blurred edges don't show through. */
+html.bl-on .bl-hit ytd-thumbnail img,
+html.bl-on .bl-hit yt-image img,
+html.bl-on .bl-hit .yt-core-image,
+html.bl-on .bl-hit .ytCoreImageHost,
+html.bl-on .bl-hit img.yt-core-image,
+html.bl-on .bl-hit .thumbnail img {
+  filter: blur(16px) saturate(0.35) brightness(0.75) !important;
+  transform: scale(1.12) !important;
+  transition: filter 140ms ease, transform 140ms ease;
+}
+
+/* Soften the metadata so the title isn't its own clickbait. */
+html.bl-on .bl-hit #video-title,
+html.bl-on .bl-hit .yt-lockup-metadata-view-model-wiz__title,
+html.bl-on .bl-hit h3 a,
+html.bl-on .bl-hit .media-item-headline {
+  filter: blur(3.6px) !important;
+  opacity: 0.55 !important;
+  transition: filter 140ms ease, opacity 140ms ease;
+}
+
+/* Kill navigation into a blocked item from the grid. */
+html.bl-on .bl-hit a#thumbnail,
+html.bl-on .bl-hit a.yt-lockup-view-model-wiz__content-image,
+html.bl-on .bl-hit #video-title-link,
+html.bl-on .bl-hit h3 a {
+  pointer-events: none !important;
+}
+
+/* Veil overlay sitting on the thumbnail. */
+.bl-veil {
+  position: absolute;
+  inset: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background: var(--bl-veil-bg);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  cursor: not-allowed;
+  pointer-events: auto;
+  animation: bl-fade 160ms ease both;
+}
+
+@keyframes bl-fade { from { opacity: 0 } to { opacity: 1 } }
+
+.bl-veil__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 11px;
+  border-radius: 999px;
+  background: rgba(12, 14, 20, 0.82);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.45);
+  color: #e9edf5;
+  font: 600 11px/1 "Roboto", system-ui, -apple-system, sans-serif;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.bl-veil__dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--bl-accent);
+  box-shadow: 0 0 8px var(--bl-accent);
+  flex: none;
+}
+
+/* Renderers need a positioning context for the veil. */
+html.bl-on .bl-anchor { position: relative !important; }
+
+/* ------------------------------------------------------------------- shorts */
+
+html.bl-on ytd-guide-entry-renderer:has(> a[href="/shorts"]),
+html.bl-on ytd-mini-guide-entry-renderer:has(> a[href="/shorts"]),
+html.bl-on ytd-rich-shelf-renderer[is-shorts],
+html.bl-on ytd-reel-shelf-renderer,
+html.bl-on ytd-rich-section-renderer:has(> * > ytd-rich-shelf-renderer[is-shorts]),
+html.bl-on ytd-rich-section-renderer:has(> * > ytd-reel-shelf-renderer),
+html.bl-on grid-shelf-view-model,
+html.bl-on ytd-reel-item-renderer,
+html.bl-on ytm-shorts-lockup-view-model,
+html.bl-on ytm-shorts-lockup-view-model-v2,
+/* An individual Short in the grid: its own primary link is the Short. */
+html.bl-on ytd-rich-item-renderer:has(> #content > ytm-shorts-lockup-view-model),
+html.bl-on ytd-rich-item-renderer:has(> #content > ytm-shorts-lockup-view-model-v2),
+html.bl-on ytd-rich-item-renderer:has(> #content > a[href*="/shorts/"]),
+html.bl-on ytd-rich-item-renderer.bl-short,
+html.bl-on ytd-video-renderer.bl-short,
+html.bl-on .bl-shorts-hidden {
+  display: none !important;
+}
+
+/* --------------------------------------------------------------- watch page */
+
+/* Pre-verdict shield: never let an unjudged frame or note through. */
+html.bl-shield ytd-player,
+html.bl-shield #movie_player,
+html.bl-shield video {
+  visibility: hidden !important;
+}
+
+/* Lock the page behind the block screen — no peeking by scrolling. */
+html.bl-blocked, html.bl-blocked body {
+  overflow: hidden !important;
+}
+
+#bl-block {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483647;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: radial-gradient(1200px 700px at 50% -10%, #16202e 0%, #0a0d13 55%, #06080c 100%);
+  font-family: "Roboto", system-ui, -apple-system, "Segoe UI", sans-serif;
+  animation: bl-fade 220ms ease both;
+}
+
+#bl-block .bl-card {
+  width: min(560px, 100%);
+  text-align: center;
+  color: #e9edf5;
+}
+
+#bl-block .bl-mark {
+  width: 60px; height: 60px;
+  margin: 0 auto 26px;
+  border-radius: 17px;
+  display: grid; place-items: center;
+  background: linear-gradient(160deg, rgba(110, 231, 183, 0.16), rgba(110, 231, 183, 0.04));
+  border: 1px solid rgba(110, 231, 183, 0.28);
+  box-shadow: 0 12px 40px rgba(110, 231, 183, 0.10);
+}
+
+#bl-block .bl-eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--bl-accent);
+  margin: 0 0 14px;
+}
+
+#bl-block h1 {
+  font-size: 30px;
+  line-height: 1.22;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  margin: 0 0 14px;
+  color: #f4f7fb;
+}
+
+#bl-block .bl-sub {
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: #9aa6b8;
+  margin: 0 auto 8px;
+  max-width: 400px;
+}
+
+#bl-block .bl-title-quote {
+  font-size: 13px;
+  color: #71809a;
+  margin: 0 auto 30px;
+  max-width: 420px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+#bl-block .bl-meter {
+  width: 220px;
+  height: 3px;
+  margin: 26px auto 0;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+#bl-block .bl-meter i {
+  display: block;
+  height: 100%;
+  border-radius: 3px;
+  background: linear-gradient(90deg, #6ee7b7, #34d399);
+  animation: bl-grow 700ms cubic-bezier(.2,.8,.2,1) both;
+}
+@keyframes bl-grow { from { width: 0 } }
+
+#bl-block .bl-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+#bl-block button {
+  font: 600 14px/1 inherit;
+  padding: 12px 22px;
+  border-radius: 10px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: transform 120ms ease, background 140ms ease, border-color 140ms ease;
+}
+#bl-block button:active { transform: translateY(1px); }
+
+#bl-block .bl-primary {
+  background: #f4f7fb;
+  color: #0a0d13;
+}
+#bl-block .bl-primary:hover { background: #ffffff; }
+
+#bl-block .bl-secondary {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.14);
+  color: #d5dce8;
+}
+#bl-block .bl-secondary:hover { background: rgba(255, 255, 255, 0.09); }
+
+#bl-block .bl-hint {
+  margin-top: 24px;
+  font-size: 12.5px;
+  color: #5d6b83;
+}
+
+#bl-block .bl-links {
+  margin-top: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+#bl-block .bl-dot { color: #3d485c; font-size: 12px; }
+
+#bl-block .bl-report {
+  background: none;
+  border: none;
+  padding: 6px;
+  font: 500 12.5px/1.4 inherit;
+  color: #5d6b83;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+#bl-block .bl-report:hover { color: #94a3b8; }
+#bl-block .bl-report[disabled] { color: var(--bl-accent); text-decoration: none; cursor: default; }
