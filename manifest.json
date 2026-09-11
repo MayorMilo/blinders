@@ -47,7 +47,8 @@
       "js": [
         "src/channels.js",
         "src/model.js",
-        "src/content.js"
+        "src/content.js",
+        "src/timer.js"
       ],
       "css": [
         "src/content.css"

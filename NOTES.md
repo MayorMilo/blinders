@@ -92,6 +92,30 @@ A verdict reached before the real metadata arrives is now marked provisional:
 blocking on thin evidence stands, but *letting a video through* on it stays
 open and is revisited when the metadata lands.
 
+## The session stopwatch
+
+One session spans a visit, not a page. `src/timer.js` keeps a single
+`{ start, last }` in storage and every tab derives its display from `start`, so
+opening a video or a second tab never restarts the count and the figure agrees
+everywhere. Reading the clock locally each tick also means it keeps ticking
+while the MV3 service worker is asleep.
+
+A session ends by going quiet rather than by being stopped: tabs write a
+heartbeat while they are visible **or** still playing (audio in a background tab
+is still a session), and if nothing has beaten for 15 minutes the next page to
+open starts fresh. Several tabs may each believe they opened the session; the
+earliest start wins, which converges without any of them co-ordinating.
+
+Two placement details that were not obvious until they broke:
+
+- The drag clamp measures with `getBoundingClientRect()`, not
+  `offsetWidth/Height`. Those are rounded, and a real height of 33.5 reported
+  as 33 let the bottom edge sit one pixel below the 100px band.
+- Clamping is a display constraint, not a preference. The intended position is
+  kept separately from the applied one — otherwise a transient tall measurement
+  (before YouTube's font loads) would overwrite where the user put it, and the
+  widget crept upward a little on every reload.
+
 ## Known limitations
 
 - **Latin-script only.** `normalize()` reduces titles to `[a-z0-9$']`, so

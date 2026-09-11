@@ -260,3 +260,123 @@ html.bl-blocked, html.bl-blocked body {
 }
 #bl-block .bl-report:hover { color: #94a3b8; }
 #bl-block .bl-report[disabled] { color: var(--bl-accent); text-decoration: none; cursor: default; }
+
+/* ========================= Blinders — session stopwatch ========================= */
+
+/*
+ * Smoked glass rather than clear: YouTube runs in both a dark and a light
+ * theme, and a dark pane with light text stays legible over either without
+ * having to detect which one is in play.
+ */
+#bl-timer {
+  position: fixed;
+  z-index: 2147483000;           /* under the block screen, over everything else */
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 15px 9px 12px;
+  border-radius: 999px;
+  isolation: isolate;
+
+  font: 600 13px/1 "Roboto", system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+  color: rgba(255, 255, 255, 0.93);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
+
+  background:
+    linear-gradient(157deg,
+      rgba(58, 66, 84, 0.52) 0%,
+      rgba(30, 35, 46, 0.44) 46%,
+      rgba(18, 21, 29, 0.50) 100%);
+  backdrop-filter: blur(22px) saturate(180%);
+  -webkit-backdrop-filter: blur(22px) saturate(180%);
+
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.34),
+    0 2px 6px rgba(0, 0, 0, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.40),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.05);
+
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+  transition: box-shadow 200ms ease, transform 160ms cubic-bezier(.2, .9, .3, 1);
+  animation: bl-timer-in 320ms cubic-bezier(.2, .9, .3, 1) both;
+}
+
+@keyframes bl-timer-in {
+  from { opacity: 0; transform: translateY(-8px) scale(0.96); }
+}
+
+/* The glaze — a soft specular sheen sitting on the upper half of the pill. */
+#bl-timer::before {
+  content: '';
+  position: absolute;
+  inset: 1px 1px auto 1px;
+  height: 54%;
+  border-radius: 999px 999px 46% 46% / 999px 999px 16px 16px;
+  background: linear-gradient(to bottom,
+    rgba(255, 255, 255, 0.30) 0%,
+    rgba(255, 255, 255, 0.10) 55%,
+    rgba(255, 255, 255, 0.00) 100%);
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* A cooler pool of light at the lower edge, so the glass reads as thick. */
+#bl-timer::after {
+  content: '';
+  position: absolute;
+  inset: auto 6px -1px 6px;
+  height: 36%;
+  border-radius: 999px;
+  background: radial-gradient(ellipse at 50% 120%,
+    rgba(170, 210, 255, 0.16) 0%,
+    rgba(170, 210, 255, 0.00) 70%);
+  pointer-events: none;
+  z-index: -1;
+}
+
+#bl-timer:hover {
+  box-shadow:
+    0 12px 34px rgba(0, 0, 0, 0.38),
+    0 2px 6px rgba(0, 0, 0, 0.24),
+    inset 0 1px 0 rgba(255, 255, 255, 0.48),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.06);
+}
+
+#bl-timer.is-dragging {
+  cursor: grabbing;
+  transform: scale(1.04);
+  box-shadow:
+    0 18px 44px rgba(0, 0, 0, 0.44),
+    inset 0 1px 0 rgba(255, 255, 255, 0.52);
+}
+
+#bl-timer .bl-timer__dot {
+  width: 7px;
+  height: 7px;
+  flex: none;
+  border-radius: 50%;
+  background: #6ee7b7;
+  box-shadow: 0 0 9px rgba(110, 231, 183, 0.85);
+  animation: bl-timer-pulse 2.6s ease-in-out infinite;
+}
+
+@keyframes bl-timer-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%      { opacity: 0.45; transform: scale(0.82); }
+}
+
+#bl-timer .bl-timer__time {
+  min-width: 42px;
+  text-align: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #bl-timer, #bl-timer .bl-timer__dot { animation: none !important; }
+  #bl-timer { transition: none !important; }
+}

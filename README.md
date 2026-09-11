@@ -97,6 +97,21 @@ open tabs immediately.
 Precedence, most specific first: a video you unblocked yourself → Shorts →
 your blocklist → your allowlist → the model (with your lexicon edits applied).
 
+**6. Counts how long you've been here.** A stopwatch starts the moment you
+open YouTube and keeps running across tabs, navigation and videos — every tab
+shows the same figure, because the elapsed time is derived from one shared
+start timestamp rather than from when a page happened to load.
+
+It sits in a glass pill at the top of the page and can be dragged, but only
+within the **top 100 pixels**: horizontal movement is free, vertical is clamped
+so the whole pill stays inside that band and never drifts down over the video.
+Where you put it is remembered.
+
+A session ends by going quiet rather than by being stopped. Tabs check in while
+they are visible or playing; if nothing has checked in for 15 minutes, the next
+page you open starts a fresh count. Leaving a tab open in the background with
+the video paused therefore does not keep the clock running for ever.
+
 ## The model
 
 `src/model.js` — a linear scoring model, on-device, no network, ~0.05 ms per
@@ -162,6 +177,7 @@ src/channels.js      channel identity: handle / id / display name → one key
 src/content.js       feed scanning, blurring, watch-page shield, Shorts removal
 src/content.css      blur, veil, block screen, Shorts hiding
 src/probe.js         MAIN-world probe: reads each navigation's playerResponse
+src/timer.js         session stopwatch: shared clock, drag clamped to the top
 src/background.js    switch, allowlists, channel memory, daily count, badge
 popup/               the toggle and settings
 test/eval.js         accuracy harness
