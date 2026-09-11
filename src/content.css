@@ -261,6 +261,24 @@ html.bl-blocked, html.bl-blocked body {
 #bl-block .bl-report:hover { color: #94a3b8; }
 #bl-block .bl-report[disabled] { color: var(--bl-accent); text-decoration: none; cursor: default; }
 
+/* ------------------------------------------------- watch-page suggestions */
+
+/*
+ * The column of what-to-watch-next beside the player. Hiding it leaves the
+ * primary column short of the space it was sharing, so centre it rather than
+ * letting the page sit off to one side; YouTube's own 1280px cap on #primary
+ * still applies, so the player does not sprawl.
+ */
+html.bl-on.bl-norecs ytd-watch-flexy #secondary,
+html.bl-on.bl-norecs ytd-watch-flexy #secondary-inner {
+  display: none !important;
+}
+
+html.bl-on.bl-norecs ytd-watch-flexy #primary {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
 /* ========================= Blinders — session stopwatch ========================= */
 
 /*

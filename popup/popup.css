@@ -471,3 +471,100 @@ body.is-on .state { color: var(--ink); }
   color: var(--dim);
   cursor: default;
 }
+
+
+/* ------------------------------------------------ small in-settings switch */
+
+.opt {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 2px 0 4px;
+}
+
+.opt__text {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  font-size: 12.5px;
+  color: #cbd4e3;
+  line-height: 1.25;
+}
+
+.opt__sub {
+  font-size: 11px;
+  color: var(--dim);
+  line-height: 1.35;
+}
+
+/* The master switch in miniature, same glass, same behaviour. */
+.mini {
+  flex: none;
+  width: 40px;
+  height: 23px;
+  padding: 0;
+  border-radius: 999px;
+  position: relative;
+  cursor: pointer;
+  isolation: isolate;
+  background: linear-gradient(155deg,
+    rgba(255, 255, 255, 0.09) 0%,
+    rgba(255, 255, 255, 0.03) 100%);
+  backdrop-filter: blur(10px) saturate(160%);
+  -webkit-backdrop-filter: blur(10px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  box-shadow:
+    0 3px 10px rgba(0, 0, 0, 0.34),
+    inset 0 1px 0 rgba(255, 255, 255, 0.22);
+  transition: background 280ms cubic-bezier(.4, 0, .2, 1),
+              border-color 280ms ease,
+              box-shadow 280ms ease;
+  outline: none;
+}
+.mini:focus-visible { box-shadow: 0 0 0 2px rgba(110, 231, 183, 0.45); }
+
+.mini::before {
+  content: '';
+  position: absolute;
+  inset: 1px 1px auto 1px;
+  height: 50%;
+  border-radius: 999px 999px 46% 46% / 999px 999px 8px 8px;
+  background: linear-gradient(to bottom,
+    rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.00));
+  pointer-events: none;
+}
+
+.mini[aria-checked="true"] {
+  background: linear-gradient(155deg,
+    rgba(110, 231, 183, 0.44) 0%,
+    rgba(52, 211, 153, 0.24) 100%);
+  border-color: rgba(110, 231, 183, 0.48);
+  box-shadow:
+    0 0 16px rgba(52, 211, 153, 0.26),
+    inset 0 1px 0 rgba(255, 255, 255, 0.38);
+}
+
+.mini__knob {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 17px;
+  height: 17px;
+  border-radius: 50%;
+  background: linear-gradient(160deg,
+    rgba(255, 255, 255, 0.40) 0%,
+    rgba(150, 162, 182, 0.30) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  box-shadow:
+    0 2px 5px rgba(0, 0, 0, 0.42),
+    inset 0 1px 1px rgba(255, 255, 255, 0.5);
+  transition: transform 300ms cubic-bezier(.34, 1.4, .5, 1), background 280ms ease;
+}
+
+.mini[aria-checked="true"] .mini__knob {
+  transform: translateX(17px);
+  background: linear-gradient(160deg,
+    rgba(255, 255, 255, 0.96) 0%, rgba(232, 240, 246, 0.80) 100%);
+  border-color: rgba(255, 255, 255, 0.6);
+}

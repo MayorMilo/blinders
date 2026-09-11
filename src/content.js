@@ -20,7 +20,8 @@
     verdicts: Object.create(null),// videoId -> boolean(block)
     chan: Object.create(null),    // channel -> [unproductive, productive]
     allowChan: Object.create(null),// canonical channel key -> always allow
-    blockChan: Object.create(null) // canonical channel key -> always block
+    blockChan: Object.create(null),// canonical channel key -> always block
+    hideRecs: true                // strip the suggestions column on watch pages
   };
 
   var watch = { id: '', settled: false, final: false, meta: null,
@@ -700,6 +701,11 @@
 
   /* -------------------------------------------------------------- bootstrap */
 
+  function applyHideRecs(on) {
+    state.hideRecs = on !== false;
+    root.classList.toggle('bl-norecs', state.hideRecs);
+  }
+
   function applyEnabled(on) {
     state.enabled = !!on;
     root.classList.toggle('bl-on', state.enabled);
@@ -726,7 +732,7 @@
   // worker. A cold-started MV3 worker can answer late or not at all, and the
   // failure mode there is silent: empty lists, so nothing gets blocked.
   chrome.storage.local.get(
-    ['enabled', 'allow', 'allowChannels', 'blockChannels', 'chan', 'lexAdd', 'lexOff'],
+    ['enabled', 'allow', 'allowChannels', 'blockChannels', 'chan', 'lexAdd', 'lexOff', 'hideRecs'],
     function (d) {
       void chrome.runtime.lastError;
       d = d || {};
@@ -736,6 +742,7 @@
       (d.blockChannels || []).forEach(function (k) { state.blockChan[k] = true; });
       if (d.chan) state.chan = d.chan;
       M.setCustomLexicon({ add: d.lexAdd || [], off: d.lexOff || [] });
+      applyHideRecs(d.hideRecs);
       applyEnabled(d.enabled !== false);
     }
   );
@@ -746,6 +753,7 @@
   chrome.storage.onChanged.addListener(function (ch, area) {
     if (area !== 'local') return;
     if (ch.enabled) applyEnabled(ch.enabled.newValue !== false);
+    if (ch.hideRecs) applyHideRecs(ch.hideRecs.newValue);
     if (ch.allow) {
       state.allow = Object.create(null);
       (ch.allow.newValue || []).forEach(function (id) { state.allow[id] = true; });

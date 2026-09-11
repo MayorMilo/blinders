@@ -8,6 +8,7 @@ var stateEl      = document.getElementById('state');
 var countEl      = document.getElementById('count');
 var settingsBtn  = document.getElementById('settingsToggle');
 var settingsBody = document.getElementById('settingsBody');
+var hideRecsBtn  = document.getElementById('hideRecs');
 var videoCount   = document.getElementById('videoCount');
 var clearVideos  = document.getElementById('clearVideos');
 
@@ -60,6 +61,18 @@ settingsBtn.addEventListener('click', function () {
   var open = settingsBtn.getAttribute('aria-expanded') === 'true';
   settingsBtn.setAttribute('aria-expanded', String(!open));
   settingsBody.hidden = open;
+});
+
+/* ----------------------------------------------------- watch-page option */
+
+function renderHideRecs(on) {
+  hideRecsBtn.setAttribute('aria-checked', String(on !== false));
+}
+
+hideRecsBtn.addEventListener('click', async function () {
+  var next = hideRecsBtn.getAttribute('aria-checked') !== 'true';
+  renderHideRecs(next);
+  await write({ hideRecs: next });
 });
 
 /* ------------------------------------------------------- channel lists */
@@ -365,7 +378,8 @@ clearVideos.addEventListener('click', async function () {
   enabled = res.enabled !== false;
   renderHeader(res.blockedToday || 0);
 
-  var d = await read(['allowChannels', 'blockChannels', 'allow', 'lexAdd', 'lexOff']);
+  var d = await read(['allowChannels', 'blockChannels', 'allow', 'lexAdd', 'lexOff', 'hideRecs']);
+  renderHideRecs(d.hideRecs !== false);
   allow.set(d.allowChannels || []);
   block.set(d.blockChannels || []);
   videos = d.allow || [];
@@ -381,6 +395,7 @@ chrome.storage.onChanged.addListener(function (ch, area) {
   if (ch.allowChannels) allow.set(ch.allowChannels.newValue || []);
   if (ch.blockChannels) block.set(ch.blockChannels.newValue || []);
   if (ch.allow) { videos = ch.allow.newValue || []; renderVideos(); }
+  if (ch.hideRecs) renderHideRecs(ch.hideRecs.newValue !== false);
   if (ch.lexAdd || ch.lexOff) {
     if (ch.lexAdd) lexAdd = ch.lexAdd.newValue || [];
     if (ch.lexOff) {

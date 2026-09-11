@@ -50,6 +50,13 @@ in testing, blocked videos sit at `currentTime === 0`, muted. The block screen
 shows the confidence and offers *Go back*, *YouTube home*, and a *wrongly
 blocked?* link that whitelists the video and reloads.
 
+**2b. Hides the suggestions column.** The what-to-watch-next rail beside the
+player is the main way one video becomes five, so it is removed and the primary
+column is centred in the space it leaves — YouTube's own 1280px cap still
+applies, so the player doesn't sprawl. This one is a preference rather than a
+rule: **Settings → Watch page → Hide recommendations** turns it off, and the
+change applies to open tabs immediately. On by default.
+
 **3. Removes Shorts.** The sidebar entry, the mini-guide entry, the "Shorts"
 filter chip, Shorts shelves, and individual Shorts in the grid. `/shorts/`
 URLs are blocked outright.

@@ -5,7 +5,7 @@
  */
 'use strict';
 
-var DEFAULTS = { enabled: true, allow: [], allowChannels: [], blockChannels: [], lexAdd: [], lexOff: [], blocked: {}, seen: {}, chan: {} };
+var DEFAULTS = { enabled: true, allow: [], allowChannels: [], blockChannels: [], lexAdd: [], lexOff: [], hideRecs: true, blocked: {}, seen: {}, chan: {} };
 
 function today() {
   var d = new Date();

@@ -127,6 +127,17 @@ ignores any `border-radius`. That renders correctly as a page, but Chrome does
 not composite the popup window's own background as transparent, so the corners
 came out pale rather than rounded. Reverted.
 
+## Hiding the suggestions column
+
+`#secondary` inside `ytd-watch-flexy` holds the whole rail — the filter chips
+and the video list both live under it, so one rule covers them. Hiding it
+leaves `#primary` short of the space it was sharing, and because `#primary`
+keeps a 1280px max-width it would otherwise sit left-aligned with a gap down
+the right-hand side; `margin: 0 auto` centres it instead of stretching it.
+
+The rule is gated on `html.bl-on.bl-norecs`, so switching the extension off
+brings the column back along with everything else.
+
 ## Known limitations
 
 - **Latin-script only.** `normalize()` reduces titles to `[a-z0-9$']`, so
