@@ -13,7 +13,7 @@
 (function () {
   'use strict';
 
-  var BAND = 100;            // the widget stays wholly inside the top 100px
+  var BAND = 200;            // the widget stays wholly inside the top 200px
   var MARGIN = 12;
   var IDLE_MS = 15 * 60 * 1000;
   var HEARTBEAT_MS = 10000;

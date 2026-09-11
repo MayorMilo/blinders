@@ -7,29 +7,19 @@
   --track-off: #1b2029;
   --edge: rgba(255, 255, 255, 0.08);
   --panel: rgba(255, 255, 255, 0.028);
-  --radius: 18px;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 html, body {
   width: 300px;
+  background: var(--bg);
   color: var(--ink);
   font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
-/*
- * The rounding has to live on an inner element. A background set on <body>
- * propagates to the canvas when <html> has none, and the canvas is painted
- * across the whole viewport — so a border-radius on either of them is
- * simply ignored.
- */
-html, body { background: transparent; }
-
-.pane {
-  border-radius: var(--radius);
-  overflow: hidden;
+body {
   background:
     radial-gradient(340px 200px at 50% -40px, rgba(110, 231, 183, 0.10), transparent 70%),
     var(--bg);

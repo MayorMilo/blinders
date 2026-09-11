@@ -110,7 +110,7 @@ Two placement details that were not obvious until they broke:
 
 - The drag clamp measures with `getBoundingClientRect()`, not
   `offsetWidth/Height`. Those are rounded, and a real height of 33.5 reported
-  as 33 let the bottom edge sit one pixel below the 100px band.
+  as 33 let the bottom edge sit one pixel below the band.
 - Clamping is a display constraint, not a preference. The intended position is
   kept separately from the applied one — otherwise a transient tall measurement
   (before YouTube's font loads) would overwrite where the user put it, and the
@@ -120,10 +120,12 @@ Two placement details that were not obvious until they broke:
   of the real rect re-runs the placement if the widget has ended up outside
   the band; without it, enlarging the pill left it two pixels low.
 
-The popup's rounded corners live on an inner `.pane`, not on `<body>`. A
-background set on `<body>` propagates to the canvas when `<html>` has none, and
-the canvas is painted across the whole viewport — so a `border-radius` on
-either of them is silently ignored.
+The popup keeps square corners. Rounding them needs a transparent `<html>` and
+`<body>` with the background moved to an inner wrapper — a background on
+`<body>` propagates to the canvas, which paints across the whole viewport and
+ignores any `border-radius`. That renders correctly as a page, but Chrome does
+not composite the popup window's own background as transparent, so the corners
+came out pale rather than rounded. Reverted.
 
 ## Known limitations
 
