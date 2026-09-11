@@ -7,19 +7,29 @@
   --track-off: #1b2029;
   --edge: rgba(255, 255, 255, 0.08);
   --panel: rgba(255, 255, 255, 0.028);
+  --radius: 18px;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 html, body {
   width: 300px;
-  background: var(--bg);
   color: var(--ink);
   font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
-body {
+/*
+ * The rounding has to live on an inner element. A background set on <body>
+ * propagates to the canvas when <html> has none, and the canvas is painted
+ * across the whole viewport — so a border-radius on either of them is
+ * simply ignored.
+ */
+html, body { background: transparent; }
+
+.pane {
+  border-radius: var(--radius);
+  overflow: hidden;
   background:
     radial-gradient(340px 200px at 50% -40px, rgba(110, 231, 183, 0.10), transparent 70%),
     var(--bg);
@@ -66,23 +76,59 @@ body.is-on .brand { color: var(--accent); }
 }
 .switch:focus-visible { box-shadow: 0 0 0 2px rgba(110, 231, 183, 0.45); }
 
+/*
+ * Glass rather than paint: the track is translucent and blurs the popup's
+ * own emerald glow behind it, so switching on reads as the panel lighting
+ * up rather than a colour being swapped in.
+ */
 .switch__track {
   display: block;
   position: relative;
   width: 148px;
   height: 76px;
   border-radius: 999px;
-  background: var(--track-off);
-  border: 1px solid var(--edge);
+  isolation: isolate;
+  background: linear-gradient(155deg,
+    rgba(255, 255, 255, 0.10) 0%,
+    rgba(255, 255, 255, 0.04) 55%,
+    rgba(255, 255, 255, 0.02) 100%);
+  backdrop-filter: blur(16px) saturate(160%);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow:
+    0 10px 28px rgba(0, 0, 0, 0.38),
+    inset 0 1px 0 rgba(255, 255, 255, 0.26),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.04);
   transition: background 320ms cubic-bezier(.4, 0, .2, 1),
               border-color 320ms ease,
               box-shadow 320ms ease;
 }
 
+/* The glaze — a sheen across the upper half of the track. */
+.switch__track::before {
+  content: '';
+  position: absolute;
+  inset: 1px 1px auto 1px;
+  height: 52%;
+  border-radius: 999px 999px 46% 46% / 999px 999px 22px 22px;
+  background: linear-gradient(to bottom,
+    rgba(255, 255, 255, 0.26) 0%,
+    rgba(255, 255, 255, 0.08) 60%,
+    rgba(255, 255, 255, 0.00) 100%);
+  pointer-events: none;
+}
+
 body.is-on .switch__track {
-  background: linear-gradient(135deg, #34d399, #6ee7b7);
-  border-color: rgba(110, 231, 183, 0.55);
-  box-shadow: 0 0 34px rgba(52, 211, 153, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.28);
+  background: linear-gradient(155deg,
+    rgba(110, 231, 183, 0.46) 0%,
+    rgba(52, 211, 153, 0.30) 55%,
+    rgba(52, 211, 153, 0.18) 100%);
+  border-color: rgba(110, 231, 183, 0.52);
+  box-shadow:
+    0 0 40px rgba(52, 211, 153, 0.30),
+    0 10px 28px rgba(0, 0, 0, 0.34),
+    inset 0 1px 0 rgba(255, 255, 255, 0.42),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.06);
 }
 
 .switch__knob {
@@ -92,15 +138,33 @@ body.is-on .switch__track {
   width: 62px;
   height: 62px;
   border-radius: 50%;
-  background: #566175;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.45);
-  transition: transform 380ms cubic-bezier(.34, 1.4, .5, 1), background 320ms ease;
+  background: linear-gradient(160deg,
+    rgba(255, 255, 255, 0.42) 0%,
+    rgba(190, 200, 216, 0.26) 48%,
+    rgba(120, 132, 152, 0.30) 100%);
+  backdrop-filter: blur(10px) saturate(150%);
+  -webkit-backdrop-filter: blur(10px) saturate(150%);
+  border: 1px solid rgba(255, 255, 255, 0.30);
+  box-shadow:
+    0 6px 16px rgba(0, 0, 0, 0.46),
+    inset 0 2px 2px rgba(255, 255, 255, 0.55),
+    inset 0 -3px 6px rgba(0, 0, 0, 0.16);
+  transition: transform 380ms cubic-bezier(.34, 1.4, .5, 1),
+              background 320ms ease,
+              box-shadow 320ms ease;
 }
 
 body.is-on .switch__knob {
   transform: translateX(72px);
-  background: #ffffff;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.32);
+  background: linear-gradient(160deg,
+    rgba(255, 255, 255, 0.96) 0%,
+    rgba(255, 255, 255, 0.80) 52%,
+    rgba(228, 236, 244, 0.72) 100%);
+  border-color: rgba(255, 255, 255, 0.62);
+  box-shadow:
+    0 8px 22px rgba(0, 0, 0, 0.34),
+    inset 0 2px 3px rgba(255, 255, 255, 0.95),
+    inset 0 -3px 7px rgba(120, 170, 150, 0.22);
 }
 
 .switch:active .switch__knob { width: 70px; }

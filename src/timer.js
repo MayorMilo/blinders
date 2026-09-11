@@ -277,10 +277,20 @@
     doc.fonts.ready.then(function () { if (!dragging) reposition(); });
   }
 
-  // Attaches once <body> exists, and re-attaches whenever YouTube rebuilds
-  // the part of the page the widget was sitting in.
+  /*
+   * Attaches once <body> exists, re-attaches whenever YouTube rebuilds the
+   * part of the page the widget sat in, and enforces the band: the pill is
+   * measured while the page is still settling, so a clamp computed against a
+   * momentarily shorter pill can leave it a pixel or two low once the font
+   * lands. Checking the real rect each second makes the invariant hold
+   * regardless of when the measurement happened to be taken.
+   */
   setInterval(function () {
-    if (enabled && (!el || !el.isConnected || el.parentNode !== doc.body)) mount();
+    if (!enabled) return;
+    if (!el || !el.isConnected || el.parentNode !== doc.body) { mount(); return; }
+    if (dragging) return;
+    var r = el.getBoundingClientRect();
+    if (r.top < 0 || r.bottom > BAND) reposition();
   }, 1000);
 
   if (doc.readyState === 'loading') {

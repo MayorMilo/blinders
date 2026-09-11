@@ -105,7 +105,8 @@ start timestamp rather than from when a page happened to load.
 It sits in a glass pill at the top of the page and can be dragged, but only
 within the **top 100 pixels**: horizontal movement is free, vertical is clamped
 so the whole pill stays inside that band and never drifts down over the video.
-Where you put it is remembered.
+Where you put it is remembered. At 171 × 65 the pill fills most of the band,
+so the vertical travel is short by design — it is meant to sit at the top.
 
 A session ends by going quiet rather than by being stopped. Tabs check in while
 they are visible or playing; if nothing has checked in for 15 minutes, the next

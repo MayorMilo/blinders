@@ -115,6 +115,15 @@ Two placement details that were not obvious until they broke:
   kept separately from the applied one — otherwise a transient tall measurement
   (before YouTube's font loads) would overwrite where the user put it, and the
   widget crept upward a little on every reload.
+- A clamp is only as good as the measurement it was computed from, and the
+  pill is measured while the page is still settling. A second-by-second check
+  of the real rect re-runs the placement if the widget has ended up outside
+  the band; without it, enlarging the pill left it two pixels low.
+
+The popup's rounded corners live on an inner `.pane`, not on `<body>`. A
+background set on `<body>` propagates to the canvas when `<html>` has none, and
+the canvas is painted across the whole viewport — so a `border-radius` on
+either of them is silently ignored.
 
 ## Known limitations
 
